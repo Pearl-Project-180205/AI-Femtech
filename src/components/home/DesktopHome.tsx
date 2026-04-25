@@ -6,6 +6,8 @@ import { Bell, Settings, User, Check, ChevronRight, Download, Plus, Flame } from
 import { UserStats, DailyLog } from "@/lib/types";
 
 export interface HomeProps {
+  lang: string;
+  dict: any;
   stats: UserStats | null;
   weekDays: Date[];
   weeklyLogs: DailyLog[];
@@ -15,6 +17,8 @@ export interface HomeProps {
 }
 
 export function DesktopHome({
+  lang,
+  dict,
   stats,
   weekDays,
   weeklyLogs,
@@ -41,12 +45,12 @@ export function DesktopHome({
       {/* Greeting and Streak */}
       <div className="flex justify-between items-end mb-8 w-full">
         <div>
-          <h2 className="text-2xl font-serif text-primary font-bold mb-2">Good morning, Elena.</h2>
-          <p className="text-neutral text-sm">Today is a high-energy day in your cycle. Embrace the movement.</p>
+          <h2 className="text-2xl font-serif text-primary font-bold mb-2">{dict.home?.goodMorning || "Good morning"}, Elena.</h2>
+          <p className="text-neutral text-sm">{dict.home?.energyDay || "Today is a high-energy day in your cycle. Embrace the movement."}</p>
         </div>
         <div className="bg-peach px-5 py-2.5 rounded-full flex items-center font-bold text-sm text-[#8F5D4D] shadow-sm">
           <Flame className="w-4 h-4 fill-[#8F5D4D] mr-2" />
-          <span>{stats?.streak_days || 12} DAYS IN A ROW</span>
+          <span>{stats?.streak_days || 12} {dict.home?.daysInRow || "DAYS IN A ROW"}</span>
         </div>
       </div>
 
@@ -56,15 +60,15 @@ export function DesktopHome({
         {/* Left Column: Protocols */}
         <div className="bg-white rounded-[24px] border border-neutral/10 shadow-sm p-8 flex flex-col">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="font-serif text-lg font-bold text-primary">Today's Protocol</h3>
+            <h3 className="font-serif text-lg font-bold text-primary">{dict.home?.todaysProtocol || "Today's Protocol"}</h3>
             <span className="text-xs text-neutral tracking-wide uppercase font-bold">{format(today, "MMMM d, yyyy")}</span>
           </div>
           
           <div className="flex-1 flex flex-col gap-3">
             {[
-              { title: "Morning Walk", sub: "20 minutes outdoors for cortisol regulation", done: false },
-              { title: "Hydration Target", sub: "2.5L with electrolyte support", done: false },
-              { title: "Sleep Quality Log", sub: "Track REM and Deep Sleep cycles", done: true },
+              { title: dict.home?.tasks?.t1_title || "Morning Walk", sub: dict.home?.tasks?.t1_sub || "20 minutes outdoors for cortisol regulation", done: false },
+              { title: dict.home?.tasks?.t2_title || "Hydration Target", sub: dict.home?.tasks?.t2_sub || "2.5L with electrolyte support", done: false },
+              { title: dict.home?.tasks?.t3_title || "Sleep Quality Log", sub: dict.home?.tasks?.t3_sub || "Track REM and Deep Sleep cycles", done: true },
             ].map((task, idx) => (
               <button key={idx} className={`w-full p-5 rounded-2xl flex items-center text-left transition-all ${task.done ? "bg-[#F3F9F8] border border-mint/50" : "bg-neutral/5 border border-transparent hover:border-neutral/20"}`}>
                 <div className={`w-5 h-5 rounded-[4px] mr-5 flex flex-shrink-0 items-center justify-center border transition-colors ${task.done ? "bg-mint/40 border-mint/0 text-primary" : "border-neutral/40 bg-white"}`}>
@@ -86,7 +90,7 @@ export function DesktopHome({
 
         {/* Right Column: Weekly Rhythm Sync */}
         <div className="bg-white rounded-[24px] border border-neutral/10 shadow-sm p-8 flex flex-col items-center">
-          <h3 className="font-serif text-base font-bold text-primary w-full mb-8">Weekly Rhythm</h3>
+          <h3 className="font-serif text-base font-bold text-primary w-full mb-8">{dict.home?.weeklyRhythm || "Weekly Rhythm"}</h3>
           
           {/* Donut Chart Mock */}
           <div className="relative w-40 h-40 mb-10">
@@ -96,15 +100,15 @@ export function DesktopHome({
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="text-xl font-bold text-primary">75%</span>
-              <span className="text-[10px] tracking-widest text-neutral font-bold mt-1">SYNCED</span>
+              <span className="text-[10px] tracking-widest text-neutral font-bold mt-1 uppercase">{dict.home?.synced || "SYNCED"}</span>
             </div>
           </div>
           
           {/* Energy Bar */}
           <div className="w-full mt-auto">
             <div className="flex justify-between text-[10px] font-bold text-neutral tracking-widest mb-2 uppercase">
-              <span>Energy Level</span>
-              <span className="text-primary">Optimal</span>
+              <span>{dict.home?.energyLevel || "Energy Level"}</span>
+              <span className="text-primary">{dict.home?.optimal || "Optimal"}</span>
             </div>
             <div className="w-full h-2 bg-neutral/10 rounded-full overflow-hidden">
               <div className="w-[85%] h-full bg-[#8F5D4D] rounded-full"></div>
@@ -119,17 +123,15 @@ export function DesktopHome({
         <div className="flex-1 p-12 flex flex-col justify-center z-10">
           <div className="mb-6">
             <span className="border border-white/20 text-white/80 py-1.5 px-4 rounded-full text-xs tracking-wider uppercase font-medium">
-              Premium Insight
+              {dict.home?.premiumInsight || "Premium Insight"}
             </span>
           </div>
-          <h3 className="text-2xl font-serif font-bold text-white mb-4">Monthly Hormonal Trend Report</h3>
+          <h3 className="text-2xl font-serif font-bold text-white mb-4">{dict.home?.monthlyTrend || "Monthly Hormonal Trend Report"}</h3>
           <p className="text-white/70 text-sm leading-relaxed max-w-lg mb-8">
-            We've analyzed your past 30 days of activity and biometric data.
-            Your follicular phase is showing significant improvement in
-            resting heart rate variability.
+            {dict.home?.premiumText || "We've analyzed your past 30 days of activity and biometric data. Your follicular phase is showing significant improvement in resting heart rate variability."}
           </p>
           <button className="bg-[#8F5D4D] text-white py-3.5 px-6 rounded-md font-bold text-sm tracking-wide shadow-md hover:bg-[#8F5D4D]/90 transition-colors flex items-center space-x-3 w-max">
-            <span>VIEW FULL REPORT</span>
+            <span>{dict.home?.viewReport || "VIEW FULL REPORT"}</span>
             <Download className="w-4 h-4" />
           </button>
         </div>

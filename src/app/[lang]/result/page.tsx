@@ -7,7 +7,7 @@ import { DailyLog } from "@/lib/types";
 import { updateActionCompletion } from "@/app/actions";
 import { Sparkles, CheckCircle2, Circle, Lock } from "lucide-react";
 
-function ResultContent() {
+function ResultContent({ lang }: { lang: string }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = searchParams.get("id");
@@ -140,7 +140,7 @@ function ResultContent() {
       <div className="fixed bottom-0 left-0 right-0 p-6 md:pb-8 bg-gradient-to-t from-secondary via-secondary to-transparent z-40 pointer-events-none md:ml-64">
         <div className="max-w-4xl mx-auto pointer-events-auto flex justify-end md:justify-end">
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push(`/${lang}`)}
             className="w-full md:w-auto md:px-12 bg-[#5F3D36] text-white py-4 rounded-full font-bold text-lg shadow-xl disabled:opacity-70 transition-all hover:opacity-90 active:scale-95 flex items-center justify-center space-x-2"
           >
             내일의 기록을 위해 돌아가기
@@ -151,10 +151,13 @@ function ResultContent() {
   );
 }
 
-export default function ResultPage() {
+import { use } from "react";
+
+export default function ResultPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = use(params);
   return (
     <Suspense fallback={<div className="p-10 text-center font-bold">Loading...</div>}>
-      <ResultContent />
+      <ResultContent lang={lang} />
     </Suspense>
   );
 }

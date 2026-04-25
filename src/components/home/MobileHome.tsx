@@ -6,6 +6,8 @@ import { Bell, Calendar, Check, User, Settings, Zap, Droplets } from "lucide-rea
 import { UserStats, DailyLog } from "@/lib/types";
 
 export interface HomeProps {
+  lang: string;
+  dict: any;
   stats: UserStats | null;
   weekDays: Date[];
   weeklyLogs: DailyLog[];
@@ -15,6 +17,8 @@ export interface HomeProps {
 }
 
 export function MobileHome({
+  lang,
+  dict,
   stats,
   weekDays,
   weeklyLogs,
@@ -42,16 +46,16 @@ export function MobileHome({
 
         {/* Greeting */}
         <div className="px-2 mb-6">
-          <h2 className="text-3xl font-serif text-primary font-bold mb-1">Welcome back</h2>
-          <p className="text-primary/70 text-sm">Your rhythm is steady today.</p>
+          <h2 className="text-3xl font-serif text-primary font-bold mb-1">{dict.home?.welcomeBack || "Welcome back"}</h2>
+          <p className="text-primary/70 text-sm">{dict.nav?.rhythmSteady || "Your rhythm is steady today."}</p>
         </div>
 
         {/* Hero Card */}
         <div className="mb-4 relative overflow-hidden bg-white border border-neutral/15 rounded-[20px] p-6 shadow-sm">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <div className="text-[10px] uppercase font-bold tracking-widest text-[#8F5D4D] mb-1">STATUS</div>
-              <h3 className="text-2xl font-serif font-bold text-primary">Rhythm Recovery</h3>
+              <div className="text-[10px] uppercase font-bold tracking-widest text-[#8F5D4D] mb-1">{dict.home?.status || "STATUS"}</div>
+              <h3 className="text-2xl font-serif font-bold text-primary">{dict.home?.rhythmRecovery || "Rhythm Recovery"}</h3>
             </div>
             <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center -mt-1">
               <div className="w-3 h-3 bg-primary rounded-tr-[8px] rounded-bl-[8px] rounded-tl-sm rounded-br-sm -rotate-45" />
@@ -60,8 +64,8 @@ export function MobileHome({
           
           <div className="mb-6">
             <div className="flex justify-between text-sm mb-2 text-primary">
-              <span>Luteal Phase</span>
-              <span>78% Optimal</span>
+              <span>{dict.home?.lutealPhase || "Luteal Phase"}</span>
+              <span>{dict.home?.percentOptimal || "78% Optimal"}</span>
             </div>
             <div className="w-full bg-neutral/10 h-2 rounded-full overflow-hidden">
               <div className="bg-[#8F5D4D] w-[78%] h-full rounded-full"></div>
@@ -69,35 +73,35 @@ export function MobileHome({
           </div>
           
           <p className="text-primary/80 italic text-sm border-l-2 border-emerald-500 pl-3">
-            &quot;Take gentle movements today; your body is preparing for rest.&quot;
+             {dict.home?.quote || "\"Take gentle movements today; your body is preparing for rest.\""}
           </p>
         </div>
 
         {/* Quick Actions (Cards) */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <button onClick={() => router.push("/check")} className="bg-white p-5 rounded-[20px] border border-neutral/15 shadow-sm text-left group">
+          <button onClick={() => router.push(`/${lang}/check`)} className="bg-white p-5 rounded-[20px] border border-neutral/15 shadow-sm text-left group">
             <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center mb-4">
               <Droplets className="w-5 h-5 text-orange-600" />
             </div>
-            <h4 className="text-primary font-serif mb-1 font-bold leading-tight">Hormone <br/>Tracking</h4>
-            <span className="text-xs text-neutral">Logged 2h ago</span>
+            <h4 className="text-primary font-serif mb-1 font-bold leading-tight" dangerouslySetInnerHTML={{ __html: (dict.home?.hormoneTracking || "Hormone Tracking").replace(" ", "<br/>") }} />
+            <span className="text-xs text-neutral">{dict.home?.loggedAgo || "Logged 2h ago"}</span>
           </button>
-          <button onClick={() => router.push("/result")} className="bg-white p-5 rounded-[20px] border border-neutral/15 shadow-sm text-left group">
+          <button onClick={() => router.push(`/${lang}/result`)} className="bg-white p-5 rounded-[20px] border border-neutral/15 shadow-sm text-left group">
             <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center mb-4">
               <Calendar className="w-5 h-5 text-primary" />
             </div>
-            <h4 className="text-primary font-serif mb-1 font-bold leading-tight">Rhythm <br/>Calendar</h4>
-            <span className="text-xs text-neutral">Next: Flow State</span>
+            <h4 className="text-primary font-serif mb-1 font-bold leading-tight" dangerouslySetInnerHTML={{ __html: (dict.home?.rhythmCalendar || "Rhythm Calendar").replace(" ", "<br/>") }} />
+            <span className="text-xs text-neutral">{dict.home?.nextState || "Next: Flow State"}</span>
           </button>
         </div>
 
         {/* Today's Protocol */}
-        <h3 className="font-bold text-primary/80 text-[10px] tracking-widest uppercase mb-3 mt-4 px-1">Today&apos;s Protocol</h3>
+        <h3 className="font-bold text-primary/80 text-[10px] tracking-widest uppercase mb-3 mt-4 px-1">{dict.home?.todaysProtocol || "Today's Protocol"}</h3>
         <div className="bg-white rounded-[20px] shadow-sm border border-neutral/15 mb-8 overflow-hidden divide-y divide-neutral/10">
           {[
-            { title: "Morning Sunlight", sub: "15 minutes outdoors", done: true },
-            { title: "Magnesium Ritual", sub: "Before 8:00 PM", done: false },
-            { title: "Journal Reflection", sub: "Daily gratitude", done: false },
+            { title: dict.home?.tasks?.t1_title || "Morning Walk", sub: dict.home?.tasks?.t1_sub || "20 minutes outdoors for cortisol regulation", done: true },
+            { title: dict.home?.tasks?.t2_title || "Hydration Target", sub: dict.home?.tasks?.t2_sub || "2.5L with electrolyte support", done: false },
+            { title: dict.home?.tasks?.t3_title || "Sleep Quality Log", sub: dict.home?.tasks?.t3_sub || "Track REM and Deep Sleep cycles", done: false },
           ].map((task, idx) => (
             <button key={idx} className="w-full p-4 flex items-center text-left hover:bg-neutral/5 transition-colors">
               <div className={`w-5 h-5 rounded-[4px] mr-4 flex items-center justify-center border transition-colors ${task.done ? "bg-primary border-primary text-white" : "border-neutral/30"}`}>
@@ -113,8 +117,8 @@ export function MobileHome({
 
         {/* Activity Record */}
         <div className="flex justify-between items-end mb-4 px-1">
-          <h3 className="font-bold text-primary/80 text-[10px] tracking-widest uppercase mb-1">Activity Record</h3>
-          <button className="text-xs text-[#8F5D4D] hover:underline mb-1">See Trends</button>
+          <h3 className="font-bold text-primary/80 text-[10px] tracking-widest uppercase mb-1">{dict.home?.activityRecord || "Activity Record"}</h3>
+          <button className="text-xs text-[#8F5D4D] hover:underline mb-1">{dict.home?.seeTrends || "See Trends"}</button>
         </div>
         
         <div className="flex justify-between pb-4">

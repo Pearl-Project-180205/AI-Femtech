@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Scale, Zap, BrainCircuit, HelpCircle, ArrowRight, Check } from "lucide-react";
+import { getDictionary } from "@/lib/dictionaries";
 
 const GOALS = [
   { id: "체중 관리", label: "Weight Management", icon: Scale },
@@ -11,11 +12,23 @@ const GOALS = [
   { id: "정신적 맑음", label: "Mental Clarity", icon: BrainCircuit },
 ];
 
-export default function OnboardingPage() {
+export default function OnboardingPage({ params }: { params: Promise<{ lang: string }> }) {
   const router = useRouter();
   const [goal, setGoal] = useState("");
   const [baseline, setBaseline] = useState("");
   const [loading, setLoading] = useState(false);
+  const [dict, setDict] = useState<any>(null);
+  const [lang, setLang] = useState<string>("en");
+
+  useEffect(() => {
+    const init = async () => {
+      const resolvedParams = await params;
+      const dictionary = await getDictionary(resolvedParams.lang);
+      setDict(dictionary);
+      setLang(resolvedParams.lang);
+    };
+    init();
+  }, [params]);
 
   const handleStart = async () => {
     if (!goal || !baseline) return;
@@ -35,12 +48,20 @@ export default function OnboardingPage() {
 
     if (!error && user) {
       localStorage.setItem("device_id", deviceId);
-      router.push("/");
+      router.push(`/${lang}`);
     } else {
       console.error(error);
       setLoading(false);
     }
   };
+
+  if (!dict) return <div className="min-h-screen bg-secondary flex items-center justify-center">Loading...</div>;
+
+  const translatedGoals = [
+    { id: "체중 관리", label: dict.onboarding?.weightManagement || "Weight Management", icon: Scale },
+    { id: "에너지 & 활력", label: dict.onboarding?.energyVitality || "Energy & Vitality", icon: Zap },
+    { id: "정신적 맑음", label: dict.onboarding?.mentalClarity || "Mental Clarity", icon: BrainCircuit },
+  ];
 
   return (
     <div className="flex z-10 flex-col min-h-screen w-full bg-secondary text-primary font-sans">
@@ -61,18 +82,16 @@ export default function OnboardingPage() {
         </div>
 
         <div className="text-center mb-16 w-full fade-in">
-          <h2 className="text-4xl font-serif font-bold text-primary mb-4">Finding your rhythm</h2>
-          <p className="text-primary/70 text-base max-w-md mx-auto">
-            We&apos;ll tailor your experience based on your current<br className="hidden md:block"/> state and aspirations.
-          </p>
+          <h2 className="text-4xl font-serif font-bold text-primary mb-4">{dict.onboarding?.findingRhythm || "Finding your rhythm"}</h2>
+          <p className="text-primary/70 text-base max-w-md mx-auto" dangerouslySetInnerHTML={{ __html: (dict.onboarding?.tailorExperience || "We&apos;ll tailor your experience based on your current<br className=\"hidden md:block\"/> state and aspirations.") }} />
         </div>
 
         <div className="w-full space-y-12 fade-in delay-100 flex-1">
           {/* Goal Selection */}
           <div className="space-y-6">
-            <h3 className="text-xl font-serif font-bold text-primary text-center">What is your primary health goal?</h3>
+            <h3 className="text-xl font-serif font-bold text-primary text-center">{dict.onboarding?.primaryGoal || "What is your primary health goal?"}</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {GOALS.map((item) => {
+              {translatedGoals.map((item) => {
                 const isSelected = goal === item.id;
                 return (
                   <button
@@ -105,13 +124,13 @@ export default function OnboardingPage() {
 
           {/* Baseline Condition */}
           <div className="space-y-4">
-            <h3 className="text-xl font-serif font-bold text-primary text-center">How is your general condition lately?</h3>
-            <p className="text-xs text-center text-primary/60 italic max-w-sm mx-auto mb-6">Share as much or as little as you like.</p>
+            <h3 className="text-xl font-serif font-bold text-primary text-center">{dict.onboarding?.howCondition || "How is your general condition lately?"}</h3>
+            <p className="text-xs text-center text-primary/60 italic max-w-sm mx-auto mb-6">{dict.onboarding?.shareAsMuch || "Share as much or as little as you like."}</p>
             <textarea 
               value={baseline}
               onChange={(e) => setBaseline(e.target.value)}
               className="w-full h-36 p-6 rounded-2xl bg-secondary border border-neutral/20 placeholder-neutral/50 text-primary focus:outline-none focus:ring-1 focus:ring-primary/20 resize-none"
-              placeholder="Example: I&apos;ve been feeling a bit sluggish in the mornings and finding it hard to focus after lunch..."
+              placeholder={dict.onboarding?.placeholder || "Example: I've been feeling a bit sluggish in the mornings and finding it hard to focus after lunch..."}
             />
           </div>
         </div>
@@ -122,20 +141,20 @@ export default function OnboardingPage() {
             disabled={!goal || !baseline || loading}
             className="w-full bg-primary text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 text-base transition-all hover:bg-opacity-90 active:scale-95 disabled:opacity-50"
           >
-            {loading ? "Configuring..." : (
+            {loading ? dict.onboarding?.configuring || "Configuring..." : (
               <>
-                <span>Start Journey</span>
+                <span>{dict.onboarding?.startJourney || "Start Journey"}</span>
                 <ArrowRight className="w-5 h-5" />
               </>
             )}
           </button>
           
-          <button className="mt-6 text-xs font-bold text-primary/70 hover:text-primary transition-colors">
-            Skip for now
+          <button className="mt-6 text-xs font-bold text-primary/70 hover:text-primary transition-colors cursor-pointer" onClick={() => router.push(`/${lang}`)}>
+             {dict.onboarding?.skipForNow || "Skip for now"}
           </button>
           
           <div className="mt-16 text-[10px] text-neutral/60 tracking-wider">
-            © 2024 For:M. Crafted for your sanctuary.
+             {dict.onboarding?.craftedFor || "© 2024 For:M. Crafted for your sanctuary."}
           </div>
         </div>
       </div>

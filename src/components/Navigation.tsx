@@ -2,25 +2,26 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { Home, Activity, Calendar, User, LayoutDashboard, ListTodo, Users, LogOut, HelpCircle, Sparkles, Plus } from "lucide-react";
+import { LanguageSelector } from "./LanguageSelector";
 
-export function Navigation() {
+export function Navigation({ lang, dict }: { lang: string, dict: any }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  if (pathname === "/onboarding") return null;
+  if (pathname === `/${lang}/onboarding`) return null;
 
   const PC_MENUS = [
-    { name: "Dashboard", path: "/", icon: LayoutDashboard },
-    { name: "Protocols", path: "#protocols", icon: ListTodo },
-    { name: "Cycle Tracking", path: "/check", icon: Calendar },
-    { name: "Community", path: "#community", icon: Users },
+    { name: dict.nav?.dashboard || "Dashboard", path: `/${lang}`, icon: LayoutDashboard },
+    { name: dict.nav?.protocols || "Protocols", path: `#protocols`, icon: ListTodo },
+    { name: dict.nav?.cycleTracking || "Cycle Tracking", path: `/${lang}/check`, icon: Calendar },
+    { name: dict.nav?.community || "Community", path: `#community`, icon: Users },
   ];
 
   const MOBILE_MENUS = [
-    { name: "TODAY", path: "/", icon: Calendar },
-    { name: "RHYTHM", path: "/check", icon: Sparkles },
-    { name: "LOG", path: "LOG", icon: Plus }, // Special case
-    { name: "ME", path: "#profile", icon: User },
+    { name: dict.nav?.today || "TODAY", path: `/${lang}`, icon: Calendar },
+    { name: dict.nav?.rhythm || "RHYTHM", path: `/${lang}/check`, icon: Sparkles },
+    { name: dict.nav?.log || "LOG", path: "LOG", icon: Plus }, // Special case
+    { name: dict.nav?.me || "ME", path: `#profile`, icon: User },
   ];
 
   return (
@@ -35,15 +36,15 @@ export function Navigation() {
                <img src="https://i.pravatar.cc/150?img=5" alt="Elena" className="w-full h-full object-cover" />
             </div>
             <div className="text-left overflow-hidden">
-              <div className="text-xs text-neutral/70">Welcome back</div>
-              <div className="text-xs font-bold text-primary truncate">Your rhythm is steady</div>
+              <div className="text-xs text-neutral/70">{dict.nav?.welcomeBack || "Welcome back"}</div>
+              <div className="text-xs font-bold text-primary truncate">{dict.nav?.rhythmSteady || "Your rhythm is steady"}</div>
             </div>
           </div>
         </div>
 
         <nav className="flex-1 space-y-2">
           {PC_MENUS.map(menu => {
-            const isActive = pathname === menu.path || (menu.path === "/result" && pathname.startsWith("/result"));
+            const isActive = pathname === menu.path || (menu.path === `/${lang}/result` && pathname.startsWith(`/${lang}/result`));
             return (
               <button
                 key={menu.name}
@@ -63,15 +64,16 @@ export function Navigation() {
         </nav>
 
         <div className="p-6 mt-auto border-t border-neutral/10">
-          <button onClick={() => router.push("/check")} className="w-full bg-primary text-white py-3.5 rounded-md font-bold text-sm shadow-md hover:bg-opacity-90 transition-all mb-6 relative overflow-hidden">
-             Log Activity
+          <button onClick={() => router.push(`/${lang}/check`)} className="w-full bg-primary text-white py-3.5 rounded-md font-bold text-sm shadow-md hover:bg-opacity-90 transition-all mb-6 relative overflow-hidden">
+             {dict.nav?.logActivity || "Log Activity"}
           </button>
           <div className="space-y-4 px-2">
-             <button className="flex items-center space-x-4 text-xs font-bold text-neutral/70 hover:text-primary transition-colors">
-               <HelpCircle className="w-4 h-4 fill-neutral/70 text-white" /><span>Support</span>
+             <button className="flex items-center space-x-4 text-xs font-bold text-neutral/70 hover:text-primary transition-colors focus:outline-none w-full">
+               <HelpCircle className="w-4 h-4 fill-neutral/70 text-white" /><span className="flex-1 text-left">{dict.nav?.support || "Support"}</span>
              </button>
-             <button className="flex items-center space-x-4 text-xs font-bold text-neutral/70 hover:text-primary transition-colors">
-               <LogOut className="w-4 h-4" /><span>Logout</span>
+             <LanguageSelector currentLang={lang} dict={dict} />
+             <button className="flex items-center space-x-4 text-xs font-bold text-neutral/70 hover:text-primary transition-colors focus:outline-none w-full mt-4 border-t border-neutral/10 pt-4">
+               <LogOut className="w-4 h-4" /><span className="flex-1 text-left">{dict.nav?.logout || "Logout"}</span>
              </button>
           </div>
         </div>
@@ -82,17 +84,17 @@ export function Navigation() {
         {MOBILE_MENUS.map(menu => {
           const isActive = pathname === menu.path;
           
-          if (menu.name === "LOG") {
+          if (menu.name === dict.nav?.log || menu.name === "LOG") {
             return (
               <button
                 key={menu.name}
-                onClick={() => router.push("/check")}
+                onClick={() => router.push(`/${lang}/check`)}
                 className="relative -top-6 flex flex-col items-center justify-center transition-transform hover:scale-105 active:scale-95"
               >
                 <div className="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-lg border-4 border-[#F8F6F1]">
                   <menu.icon className="w-6 h-6" />
                 </div>
-                <span className="text-[9px] font-bold tracking-wider mt-1 text-neutral/70">LOG</span>
+                <span className="text-[9px] font-bold tracking-wider mt-1 text-neutral/70">{menu.name}</span>
               </button>
             )
           }

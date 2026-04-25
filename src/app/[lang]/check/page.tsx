@@ -18,7 +18,10 @@ const SLEEP_OPTIONS = [
 const MENSTRUAL_OPTIONS = ["없음", "생리 전", "생리 중", "생리 후"];
 const ACTIVITY_OPTIONS = ["낮음", "보통", "높음"];
 
-export default function CheckPage() {
+import { use, useEffect } from "react";
+
+export default function CheckPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = use(params);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -54,7 +57,7 @@ export default function CheckPage() {
       });
 
       if (res.success) {
-        router.push(`/result?id=${res.logId}`);
+        router.push(`/${lang}/result?id=${res.logId}`);
       }
     } catch (err) {
       console.error("Failed to analyze condition:", err instanceof Error ? err.message : err);

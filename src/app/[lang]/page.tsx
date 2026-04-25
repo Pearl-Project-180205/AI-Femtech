@@ -6,20 +6,33 @@ import { supabase } from "@/lib/supabase";
 import { UserStats, DailyLog } from "@/lib/types";
 import { updateActionCompletion } from "@/app/actions";
 import { startOfWeek, addDays, format } from "date-fns";
+import { getDictionary } from "@/lib/dictionaries";
 
 import { MobileHome } from "@/components/home/MobileHome";
 import { DesktopHome } from "@/components/home/DesktopHome";
 
-export default function HomePage() {
+export default function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<UserStats | null>(null);
+  const [dict, setDict] = useState<any>(null);
+  const [lang, setLang] = useState<string>("ko");
   
   const [weekDays, setWeekDays] = useState<Date[]>([]);
   const [weeklyLogs, setWeeklyLogs] = useState<DailyLog[]>([]);
   const [todayLog, setTodayLog] = useState<DailyLog | null>(null);
   
   const [completed, setCompleted] = useState<number[]>([]);
+
+  useEffect(() => {
+    const init = async () => {
+      const resolvedParams = await params;
+      const dictionary = await getDictionary(resolvedParams.lang);
+      setDict(dictionary);
+      setLang(resolvedParams.lang);
+    };
+    init();
+  }, [params]);
 
   useEffect(() => {
     const deviceId = localStorage.getItem("device_id");
@@ -107,12 +120,14 @@ export default function HomePage() {
     await updateActionCompletion(todayLog.id!, newCompleted, score);
   };
 
-  if (loading) return <div className="p-10 text-center text-primary font-bold">리듬 확인 중...</div>;
+  if (loading || !dict) return <div className="p-10 text-center text-primary font-bold">리듬 확인 중...</div>;
 
   return (
     <>
       {/* Mobile Template */}
       <MobileHome
+        lang={lang}
+        dict={dict}
         stats={stats}
         weekDays={weekDays}
         weeklyLogs={weeklyLogs}
@@ -123,6 +138,8 @@ export default function HomePage() {
 
       {/* Desktop Template */}
       <DesktopHome
+        lang={lang}
+        dict={dict}
         stats={stats}
         weekDays={weekDays}
         weeklyLogs={weeklyLogs}
