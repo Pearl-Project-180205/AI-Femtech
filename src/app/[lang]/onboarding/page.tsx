@@ -64,7 +64,7 @@ export default function OnboardingPage({ params }: { params: Promise<{ lang: str
   ];
 
   return (
-    <div className="flex z-10 flex-col min-h-screen w-full bg-secondary text-primary font-sans">
+    <div className="fixed inset-0 overflow-y-auto z-10 flex flex-col bg-secondary text-primary font-sans">
       {/* Top Header */}
       <header className="flex justify-between items-center px-6 py-5 border-b border-neutral/10 bg-secondary w-full">
         <h1 className="text-xl font-serif font-bold text-primary tracking-wide">For:M</h1>
