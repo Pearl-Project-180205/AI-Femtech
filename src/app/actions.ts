@@ -3,7 +3,9 @@
 import { supabase } from "@/lib/supabase";
 import Anthropic from "@anthropic-ai/sdk";
 
-const anthropic = new Anthropic();
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
 
 const SYSTEM_PROMPT = `You are a simple health coach for women in their 40s.
 Your job is to:
