@@ -50,7 +50,8 @@ export default function OnboardingPage({ params }: { params: Promise<{ lang: str
       localStorage.setItem("device_id", deviceId);
       router.push(`/${lang}`);
     } else {
-      console.error(error);
+      console.error("Supabase insert error:", error?.message, error?.code, error?.details);
+      alert(dict.onboarding?.errorMessage || "Something went wrong. Please try again.");
       setLoading(false);
     }
   };
