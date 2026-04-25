@@ -1,0 +1,154 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { format, isSameDay } from "date-fns";
+import { Bell, Calendar, Check, User, Settings, Zap, Droplets } from "lucide-react";
+import { UserStats, DailyLog } from "@/lib/types";
+
+export interface HomeProps {
+  stats: UserStats | null;
+  weekDays: Date[];
+  weeklyLogs: DailyLog[];
+  todayLog: DailyLog | null;
+  completed: number[];
+  toggleAction: (index: number) => Promise<void>;
+}
+
+export function MobileHome({
+  stats,
+  weekDays,
+  weeklyLogs,
+  todayLog,
+  completed,
+  toggleAction,
+}: HomeProps) {
+  const router = useRouter();
+  const today = new Date();
+
+  return (
+    <div className="flex flex-col min-h-screen px-6 py-8 w-full md:hidden bg-[#FBF9F6]">
+      <div className="w-full flex-1 flex flex-col pt-4 max-w-lg mx-auto">
+        {/* Top Header */}
+        <header className="flex justify-between items-center mb-6 w-full px-2">
+          <h1 className="text-xl font-serif text-primary tracking-wide">For:M</h1>
+          <div className="flex items-center space-x-4">
+            <Bell className="w-5 h-5 text-neutral/70" />
+            <Settings className="w-5 h-5 text-neutral/70" />
+            <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center overflow-hidden">
+              <User className="w-4 h-4 text-white" />
+            </div>
+          </div>
+        </header>
+
+        {/* Greeting */}
+        <div className="px-2 mb-6">
+          <h2 className="text-3xl font-serif text-primary font-bold mb-1">Welcome back</h2>
+          <p className="text-primary/70 text-sm">Your rhythm is steady today.</p>
+        </div>
+
+        {/* Hero Card */}
+        <div className="mb-4 relative overflow-hidden bg-white border border-neutral/15 rounded-[20px] p-6 shadow-sm">
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <div className="text-[10px] uppercase font-bold tracking-widest text-[#8F5D4D] mb-1">STATUS</div>
+              <h3 className="text-2xl font-serif font-bold text-primary">Rhythm Recovery</h3>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center -mt-1">
+              <div className="w-3 h-3 bg-primary rounded-tr-[8px] rounded-bl-[8px] rounded-tl-sm rounded-br-sm -rotate-45" />
+            </div>
+          </div>
+          
+          <div className="mb-6">
+            <div className="flex justify-between text-sm mb-2 text-primary">
+              <span>Luteal Phase</span>
+              <span>78% Optimal</span>
+            </div>
+            <div className="w-full bg-neutral/10 h-2 rounded-full overflow-hidden">
+              <div className="bg-[#8F5D4D] w-[78%] h-full rounded-full"></div>
+            </div>
+          </div>
+          
+          <p className="text-primary/80 italic text-sm border-l-2 border-emerald-500 pl-3">
+            &quot;Take gentle movements today; your body is preparing for rest.&quot;
+          </p>
+        </div>
+
+        {/* Quick Actions (Cards) */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <button onClick={() => router.push("/check")} className="bg-white p-5 rounded-[20px] border border-neutral/15 shadow-sm text-left group">
+            <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center mb-4">
+              <Droplets className="w-5 h-5 text-orange-600" />
+            </div>
+            <h4 className="text-primary font-serif mb-1 font-bold leading-tight">Hormone <br/>Tracking</h4>
+            <span className="text-xs text-neutral">Logged 2h ago</span>
+          </button>
+          <button onClick={() => router.push("/result")} className="bg-white p-5 rounded-[20px] border border-neutral/15 shadow-sm text-left group">
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center mb-4">
+              <Calendar className="w-5 h-5 text-primary" />
+            </div>
+            <h4 className="text-primary font-serif mb-1 font-bold leading-tight">Rhythm <br/>Calendar</h4>
+            <span className="text-xs text-neutral">Next: Flow State</span>
+          </button>
+        </div>
+
+        {/* Today's Protocol */}
+        <h3 className="font-bold text-primary/80 text-[10px] tracking-widest uppercase mb-3 mt-4 px-1">Today&apos;s Protocol</h3>
+        <div className="bg-white rounded-[20px] shadow-sm border border-neutral/15 mb-8 overflow-hidden divide-y divide-neutral/10">
+          {[
+            { title: "Morning Sunlight", sub: "15 minutes outdoors", done: true },
+            { title: "Magnesium Ritual", sub: "Before 8:00 PM", done: false },
+            { title: "Journal Reflection", sub: "Daily gratitude", done: false },
+          ].map((task, idx) => (
+            <button key={idx} className="w-full p-4 flex items-center text-left hover:bg-neutral/5 transition-colors">
+              <div className={`w-5 h-5 rounded-[4px] mr-4 flex items-center justify-center border transition-colors ${task.done ? "bg-primary border-primary text-white" : "border-neutral/30"}`}>
+                {task.done && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+              </div>
+              <div className="flex-1">
+                <div className={`font-medium text-sm ${task.done ? "text-neutral line-through" : "text-primary"}`}>{task.title}</div>
+                <div className="text-sm text-neutral/70 mt-0.5">{task.sub}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Activity Record */}
+        <div className="flex justify-between items-end mb-4 px-1">
+          <h3 className="font-bold text-primary/80 text-[10px] tracking-widest uppercase mb-1">Activity Record</h3>
+          <button className="text-xs text-[#8F5D4D] hover:underline mb-1">See Trends</button>
+        </div>
+        
+        <div className="flex justify-between pb-4">
+          {weekDays.map(day => {
+            const isT = isSameDay(day, today);
+            const isPast = day < today;
+            
+            if (isT) {
+              return (
+                <div key="today" className="w-[52px] h-[72px] rounded-[26px] bg-primary flex flex-col items-center justify-center text-white shadow-lg border-2 border-primary/20 scale-105 mx-1">
+                  <span className="text-xs font-medium mb-1">{format(day, "EE")[0]}</span>
+                  <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-primary mt-1">
+                    <Zap className="w-4 h-4 fill-primary" />
+                  </div>
+                </div>
+              )
+            }
+
+            return (
+              <div key={day.toISOString()} className="w-[46px] h-[64px] rounded-[23px] border border-[#C6C4BC] flex flex-col items-center justify-center">
+                <span className="text-xs text-primary/70 mb-2">{format(day, "EE")[0]}</span>
+                {isPast ? (
+                  <div className="w-5 h-5 rounded-full bg-emerald-200 flex items-center justify-center text-primary">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </div>
+                ) : (
+                  <div className="w-1.5 h-1.5 rounded-full bg-neutral/30" />
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+    </div>
+  );
+}
