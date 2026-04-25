@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Newsreader } from "next/font/google";
 import "../globals.css";
 import { Navigation } from "@/components/Navigation";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { getDictionary } from "@/lib/dictionaries";
 
 const manrope = Manrope({
@@ -42,6 +43,10 @@ export default async function RootLayout({
             {children}
           </div>
         </main>
+        {/* Floating language selector — always visible on all pages */}
+        <div className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40">
+          <LanguageSelector currentLang={lang} dict={dict} floating />
+        </div>
       </body>
     </html>
   );

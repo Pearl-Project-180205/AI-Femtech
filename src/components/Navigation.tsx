@@ -71,8 +71,7 @@ export function Navigation({ lang, dict }: { lang: string, dict: any }) {
              <button className="flex items-center space-x-4 text-xs font-bold text-neutral/70 hover:text-primary transition-colors focus:outline-none w-full">
                <HelpCircle className="w-4 h-4 fill-neutral/70 text-white" /><span className="flex-1 text-left">{dict.nav?.support || "Support"}</span>
              </button>
-             <LanguageSelector currentLang={lang} dict={dict} />
-             <button className="flex items-center space-x-4 text-xs font-bold text-neutral/70 hover:text-primary transition-colors focus:outline-none w-full mt-4 border-t border-neutral/10 pt-4">
+<button className="flex items-center space-x-4 text-xs font-bold text-neutral/70 hover:text-primary transition-colors focus:outline-none w-full mt-4 border-t border-neutral/10 pt-4">
                <LogOut className="w-4 h-4" /><span className="flex-1 text-left">{dict.nav?.logout || "Logout"}</span>
              </button>
           </div>
