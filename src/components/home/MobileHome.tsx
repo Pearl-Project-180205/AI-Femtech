@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { format, isSameDay } from "date-fns";
-import { Bell, Calendar, Check, User, Settings, Zap, Droplets } from "lucide-react";
+import { Bell, Calendar, Check, User, Settings, Zap, Droplets, Lock } from "lucide-react";
 import { UserStats, DailyLog } from "@/lib/types";
 
 export interface HomeProps {
@@ -44,18 +44,36 @@ export function MobileHome({
           </div>
         </header>
 
-        {/* Greeting */}
+        {/* Greeting & Streak */}
+        <div className="px-2 mb-4 flex justify-between items-start">
+          <div>
+            <h2 className="text-3xl font-serif text-primary font-bold mb-1">{dict.home?.welcomeBack || "Welcome back"}</h2>
+            <p className="text-primary/70 text-sm">{dict.nav?.rhythmSteady || "Your rhythm is steady today."}</p>
+          </div>
+          <div className="flex flex-col items-center bg-orange-50 px-3 py-1.5 rounded-xl border border-orange-100 shadow-sm mt-1">
+            <span className="text-xl font-bold text-orange-600">🔥 {stats?.streak_days || 12}</span>
+            <span className="text-[10px] font-bold text-orange-600/80 tracking-tight whitespace-nowrap">{dict.home?.streakText || "일 연속 코칭 참여 중!"}</span>
+          </div>
+        </div>
+
+        {/* Yesterday's Feedback */}
         <div className="px-2 mb-6">
-          <h2 className="text-3xl font-serif text-primary font-bold mb-1">{dict.home?.welcomeBack || "Welcome back"}</h2>
-          <p className="text-primary/70 text-sm">{dict.nav?.rhythmSteady || "Your rhythm is steady today."}</p>
+          <div className="bg-[#F5F7F5] border border-emerald-100 p-3.5 rounded-[16px] flex items-start space-x-3 shadow-sm">
+            <div className="bg-emerald-100 text-emerald-600 p-1 rounded-full mt-0.5 flex-shrink-0">
+              <Check className="w-4 h-4 stroke-[3]" />
+            </div>
+            <p className="text-sm text-primary/80 font-medium leading-snug">
+              {dict.home?.yesterdayFeedback || "어제 제안드린 행동 중 2가지를 완수하셨네요! 오늘도 좋은 리듬을 이어가요."}
+            </p>
+          </div>
         </div>
 
         {/* Hero Card */}
         <div className="mb-4 relative overflow-hidden bg-white border border-neutral/15 rounded-[20px] p-6 shadow-sm">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <div className="text-[10px] uppercase font-bold tracking-widest text-[#8F5D4D] mb-1">{dict.home?.status || "STATUS"}</div>
-              <h3 className="text-2xl font-serif font-bold text-primary">{dict.home?.rhythmRecovery || "Rhythm Recovery"}</h3>
+              <div className="text-[10px] uppercase font-bold tracking-widest text-emerald-600 bg-emerald-50 border border-emerald-100 inline-block px-2.5 py-1 rounded-full mb-3">AI COACHING</div>
+              <h3 className="text-2xl font-serif font-bold text-primary">{dict.home?.coachingHero || "나만의 맞춤 코칭"}</h3>
             </div>
             <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center -mt-1">
               <div className="w-3 h-3 bg-primary rounded-tr-[8px] rounded-bl-[8px] rounded-tl-sm rounded-br-sm -rotate-45" />
@@ -115,10 +133,13 @@ export function MobileHome({
           ))}
         </div>
 
-        {/* Activity Record */}
-        <div className="flex justify-between items-end mb-4 px-1">
-          <h3 className="font-bold text-primary/80 text-[10px] tracking-widest uppercase mb-1">{dict.home?.activityRecord || "Activity Record"}</h3>
-          <button className="text-xs text-[#8F5D4D] hover:underline mb-1">{dict.home?.seeTrends || "See Trends"}</button>
+        {/* Activity Record & Premium Lock */}
+        <div className="flex justify-between items-end mb-4 px-1 mt-8">
+          <h3 className="font-bold text-primary/80 text-[10px] tracking-widest uppercase mb-1">{dict.home?.premiumInsight || "Premium Insight"}</h3>
+          <button className="flex items-center text-xs text-[#8F5D4D] font-bold hover:underline mb-1 bg-orange-50 px-2 py-1 rounded-md transition-colors hover:bg-orange-100">
+            <Lock className="w-3 h-3 mr-1" />
+            {dict.home?.monthlyTrend || "월간 호르몬 트렌드 리포트"}
+          </button>
         </div>
         
         <div className="flex justify-between pb-4">

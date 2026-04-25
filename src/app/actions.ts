@@ -7,23 +7,23 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-const SYSTEM_PROMPT = `You are a simple health coach for women in their 40s.
+const SYSTEM_PROMPT = `You are a health coach for women in their 40s.
 Your job is to:
 - Analyze daily condition based on today's data and past 3 days patterns.
-- Give exactly 3 simple actions.
+- Give a short 1 sentence summary (free_summary).
+- Give a detailed cause analysis (paid_result).
+- Give exactly 3 simple actionable recommendations (actions).
 
 Rules:
-- Keep it short
+- Keep language simple
 - No medical diagnosis
-- No long explanation
-- Only practical advice
-- Friendly but concise tone
-- Language: Korean (Actions and Cause must be in Korean)
+- All outputs must be in Korean.
 - Return ONLY valid JSON, no other text
 
 Return JSON strictly in this format:
 {
-  "cause": "1 short sentence explaining the likely cause based on today and past 3 days",
+  "free_summary": "1 short summary sentence",
+  "paid_result": "Detailed cause analysis based on patterns",
   "actions": ["action 1", "action 2", "action 3"]
 }`;
 
@@ -106,20 +106,20 @@ Activity: ${activity}`;
       .from("daily_logs")
       .insert({
         user_id: userProfile.id,
+        device_id: device_id,
         date: today,
         sleep,
         condition,
         weight,
         menstrual,
         activity,
-        ai_result: aiResult.cause || "패턴을 분석 중입니다.",
+        free_summary: aiResult.free_summary || "수면부족으로 피로가 발생할 수 있습니다.",
+        paid_result: aiResult.paid_result || "상세 패턴 분석 중입니다.",
         actions: aiResult.actions || [
           "물을 마시세요",
           "휴식하세요",
           "스트레칭 하세요",
-        ],
-        completed_actions: [],
-        score: 0,
+        ]
       })
       .select()
       .single();
