@@ -31,6 +31,7 @@ export function middleware(request: NextRequest) {
   if (
     pathname.startsWith('/_next') ||
     pathname.includes('/api/') ||
+    pathname.startsWith('/auth/') ||
     pathname.match(/\.(png|jpg|jpeg|svg|ico|css)$/)
   ) return;
 
