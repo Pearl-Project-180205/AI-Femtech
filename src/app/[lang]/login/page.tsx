@@ -21,8 +21,8 @@ export default function LoginPage({ params }: { params: Promise<{ lang: string }
        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#8F5D4D]/10 mb-6">
          <span className="text-2xl">🔒</span>
        </div>
-       <h1 className="text-2xl md:text-3xl font-serif font-bold mb-4 leading-tight">지속적인 코칭을 위해<br/>데이터를 안전하게 보관하세요</h1>
-       <p className="opacity-70 max-w-sm mb-12 flex flex-col space-y-2 text-sm">
+       <h1 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-4 leading-tight">지속적인 코칭을 위해<br/>데이터를 안전하게 보관하세요</h1>
+       <p className="text-sm md:text-base text-primary/70 max-w-sm mb-12 flex flex-col space-y-2 leading-relaxed">
          <span>입력하신 목표와 체형 데이터를 기반으로</span>
          <span>정확한 AI 주기 추적과 분석 결과를 제공합니다.</span>
        </p>

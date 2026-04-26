@@ -99,17 +99,17 @@ export default function CheckPage({ params }: { params: Promise<{ lang: string }
   }
 
   return (
-    <div className="flex flex-col min-h-full py-8 md:py-12 pb-32 px-6 md:px-12 md:ml-64 max-w-5xl md:mx-auto w-full">
-      <div className="mb-8">
+    <div className="flex flex-col min-h-full py-8 md:py-16 pb-32 px-6 md:px-16 w-full max-w-4xl text-left">
+      <div className="mb-10 text-left">
         <h4 className="text-xs font-bold text-neutral uppercase tracking-widest mb-1">DAILY CHECK-IN</h4>
-        <h2 className="text-3xl md:text-4xl font-serif text-primary">당신의 컨디션 기록</h2>
+        <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary">당신의 컨디션 기록</h2>
       </div>
 
-      <div className="space-y-10">
+      <div className="space-y-12 w-full">
         
         {/* Conditions */}
-        <section>
-          <h3 className="text-xl md:text-2xl font-serif text-primary mb-4">불편하거나 특징적인 징후가 있나요?</h3>
+        <section className="w-full">
+          <h3 className="text-xl md:text-2xl font-serif font-bold text-primary mb-4">불편하거나 특징적인 징후가 있나요?</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {CONDITIONS.map(c => (
               <button
@@ -129,8 +129,8 @@ export default function CheckPage({ params }: { params: Promise<{ lang: string }
         </section>
 
         {/* Sleep */}
-        <section>
-          <h3 className="text-xl md:text-2xl font-serif text-primary mb-4">수면의 질은 어떠셨나요?</h3>
+        <section className="w-full">
+          <h3 className="text-xl md:text-2xl font-serif font-bold text-primary mb-4">수면의 질은 어떠셨나요?</h3>
           <div className="space-y-3">
             {SLEEP_OPTIONS.map(opt => (
               <button
@@ -158,9 +158,9 @@ export default function CheckPage({ params }: { params: Promise<{ lang: string }
         </section>
 
         {/* Menstrual & Activity */}
-        <section className="grid grid-cols-2 gap-6">
+        <section className="grid grid-cols-2 gap-6 w-full">
           <div>
-            <h3 className="text-lg md:text-xl font-serif text-primary mb-3">생리 주기</h3>
+            <h3 className="text-xl md:text-2xl font-serif font-bold text-primary mb-4">생리 주기</h3>
             <div className="flex flex-col space-y-2">
               {MENSTRUAL_OPTIONS.map(m => (
                 <button
@@ -177,7 +177,7 @@ export default function CheckPage({ params }: { params: Promise<{ lang: string }
           </div>
 
           <div>
-            <h3 className="text-lg md:text-xl font-serif text-primary mb-3">활동량</h3>
+            <h3 className="text-xl md:text-2xl font-serif font-bold text-primary mb-4">활동량</h3>
             <div className="flex flex-col space-y-2">
               {ACTIVITY_OPTIONS.map(a => (
                 <button
@@ -195,8 +195,8 @@ export default function CheckPage({ params }: { params: Promise<{ lang: string }
         </section>
 
         {/* Weight */}
-        <section>
-          <h3 className="text-lg md:text-xl font-serif text-primary mb-3">체중 (선택 사항)</h3>
+        <section className="w-full">
+          <h3 className="text-xl md:text-2xl font-serif font-bold text-primary mb-4">체중 (선택 사항)</h3>
           <input 
             type="number"
             value={weight}
@@ -208,8 +208,8 @@ export default function CheckPage({ params }: { params: Promise<{ lang: string }
 
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-6 md:pb-8 bg-gradient-to-t from-secondary via-secondary to-transparent z-40 pointer-events-none md:ml-64">
-        <div className="max-w-4xl mx-auto pointer-events-auto flex justify-end md:justify-end">
+      <div className="fixed bottom-0 left-0 right-0 p-6 md:pb-8 bg-gradient-to-t from-secondary via-secondary to-transparent z-40 pointer-events-none md:pl-64">
+        <div className="w-full max-w-4xl px-0 md:px-16 pointer-events-auto flex justify-start md:justify-start">
           <button
             onClick={handleSubmit}
             disabled={loading}

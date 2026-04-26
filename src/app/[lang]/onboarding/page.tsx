@@ -72,14 +72,14 @@ export default function OnboardingPage({ params }: { params: Promise<{ lang: str
         </div>
 
         <div className="text-center mb-16 w-full fade-in">
-          <h2 className="text-4xl font-serif font-bold text-primary mb-4">{dict.onboarding?.findingRhythm || "Finding your rhythm"}</h2>
-          <p className="text-primary/70 text-base max-w-md mx-auto" dangerouslySetInnerHTML={{ __html: (dict.onboarding?.tailorExperience || "We&apos;ll tailor your experience based on your current<br className=\"hidden md:block\"/> state and aspirations.") }} />
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-4">{dict.onboarding?.findingRhythm || "Finding your rhythm"}</h2>
+          <p className="text-sm md:text-base text-primary/70 max-w-md mx-auto leading-relaxed" dangerouslySetInnerHTML={{ __html: (dict.onboarding?.tailorExperience || "We&apos;ll tailor your experience based on your current<br className=\"hidden md:block\"/> state and aspirations.") }} />
         </div>
 
         <div className="w-full space-y-12 fade-in delay-100 flex-1">
           {/* Goal Selection */}
           <div className="space-y-6">
-            <h3 className="text-xl font-serif font-bold text-primary text-center">{dict.onboarding?.primaryGoal || "What is your primary health goal?"}</h3>
+            <h3 className="text-xl md:text-2xl font-serif font-bold text-primary text-center mb-6">{dict.onboarding?.primaryGoal || "What is your primary health goal?"}</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {translatedGoals.map((item) => {
                 const isSelected = goal === item.id;
@@ -114,8 +114,8 @@ export default function OnboardingPage({ params }: { params: Promise<{ lang: str
 
           {/* Baseline Condition */}
           <div className="space-y-4">
-            <h3 className="text-xl font-serif font-bold text-primary text-center">{dict.onboarding?.howCondition || "How is your general condition lately?"}</h3>
-            <p className="text-xs text-center text-primary/60 italic max-w-sm mx-auto mb-6">{dict.onboarding?.shareAsMuch || "Share as much or as little as you like."}</p>
+            <h3 className="text-xl md:text-2xl font-serif font-bold text-primary text-center mb-2">{dict.onboarding?.howCondition || "How is your general condition lately?"}</h3>
+            <p className="text-xs md:text-sm text-center text-primary/70 italic max-w-sm mx-auto mb-6 leading-relaxed">{dict.onboarding?.shareAsMuch || "Share as much or as little as you like."}</p>
             <textarea 
               value={baseline}
               onChange={(e) => setBaseline(e.target.value)}

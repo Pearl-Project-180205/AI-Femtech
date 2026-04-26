@@ -41,7 +41,7 @@ function ResultContent({ lang }: { lang: string }) {
   if (!log) return <div className="p-10 text-center">Log not found.</div>;
 
   return (
-    <div className="flex flex-col min-h-screen pb-24 md:pb-8 w-full max-w-5xl md:mx-auto md:ml-64 bg-secondary">
+    <div className="flex flex-col min-h-screen pb-24 md:pb-8 w-full max-w-4xl bg-secondary text-left">
       {/* Top Banner (Free Summary) */}
       <div className="bg-white rounded-b-[40px] px-6 md:px-12 pt-12 pb-10 shadow-sm relative overflow-hidden">
         <h4 className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-4">오늘의 핵심 요약</h4>
@@ -54,7 +54,7 @@ function ResultContent({ lang }: { lang: string }) {
       <div className="px-6 md:px-12 py-10 flex-1">
         {!isPremium ? (
           <div className="relative overflow-hidden rounded-3xl border border-neutral/10 bg-white shadow-md p-8 text-center mt-2">
-            <h2 className="text-2xl font-serif text-primary font-bold mb-6">나만의 맞춤 코칭 받기</h2>
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-primary mb-6">나만의 맞춤 코칭 받기</h2>
             
             {/* Blurred background mock */}
             <div className="absolute inset-x-0 bottom-0 top-32 bg-white/70 backdrop-blur-[4px] z-10 flex flex-col items-center justify-center pt-8">
@@ -105,7 +105,7 @@ function ResultContent({ lang }: { lang: string }) {
 
              <div>
                 <h4 className="text-xs font-bold text-neutral uppercase tracking-widest mb-2">오늘의 프로토콜</h4>
-                <h2 className="text-2xl font-serif text-primary font-bold mb-6">당신을 위한 3가지 맞춤 행동</h2>
+                <h2 className="text-2xl md:text-3xl font-serif font-bold text-primary mb-6">당신을 위한 3가지 맞춤 행동</h2>
                 
                 <div className="space-y-3">
                   {(log.actions || ["충분한 휴식을 취하세요"]).map((action: string, idx: number) => (
@@ -124,8 +124,8 @@ function ResultContent({ lang }: { lang: string }) {
         )}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-6 md:pb-8 bg-gradient-to-t from-secondary via-secondary to-transparent z-40 pointer-events-none md:ml-64">
-        <div className="max-w-4xl mx-auto pointer-events-auto flex justify-end md:justify-end">
+      <div className="fixed bottom-0 left-0 right-0 p-6 md:pb-8 bg-gradient-to-t from-secondary via-secondary to-transparent z-40 pointer-events-none md:pl-64">
+        <div className="w-full max-w-4xl pointer-events-auto flex justify-start">
           <button
             onClick={() => router.push(`/${lang}`)}
             className="w-full md:w-auto md:px-12 bg-[#5F3D36] text-white py-4 rounded-full font-bold text-lg shadow-xl shadow-primary/20 disabled:opacity-70 transition-all hover:opacity-90 active:scale-95 flex items-center justify-center space-x-2"
