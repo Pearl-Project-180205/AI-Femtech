@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { analyzeCondition } from "@/app/actions";
 import { Moon, Activity as ActivityIcon, Droplet, Plus } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const CONDITIONS = [
   "브레인 포그", "근육 긴장", "소화 불량/가스", "평온함", "두통", "기타"
@@ -24,6 +25,7 @@ export default function CheckPage({ params }: { params: Promise<{ lang: string }
   const { lang } = use(params);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   const [sleep, setSleep] = useState("");
   const [condition, setCondition] = useState<string[]>([]);
@@ -37,6 +39,34 @@ export default function CheckPage({ params }: { params: Promise<{ lang: string }
     );
   };
 
+  useEffect(() => {
+    const setupProfileIfNeeded = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        router.push(`/${lang}/login`);
+        return;
+      }
+
+      const tempGoal = localStorage.getItem("temp_goal");
+      const tempBaseline = localStorage.getItem("temp_baseline");
+
+      if (tempGoal && tempBaseline) {
+        await supabase.from("user_profiles").upsert({
+          id: user.id,
+          goal: tempGoal,
+          baseline_condition: tempBaseline
+        });
+        localStorage.removeItem("temp_goal");
+        localStorage.removeItem("temp_baseline");
+      }
+      
+      setAuthChecked(true);
+    };
+    setupProfileIfNeeded();
+  }, [lang, router]);
+
   const handleSubmit = async () => {
     if (!sleep || !menstrual || !activity || condition.length === 0) {
       alert("필수 항목을 모두 입력해주세요.");
@@ -44,11 +74,9 @@ export default function CheckPage({ params }: { params: Promise<{ lang: string }
     }
 
     setLoading(true);
-    const deviceId = localStorage.getItem("device_id") || "";
     
     try {
       const res = await analyzeCondition({
-        device_id: deviceId,
         sleep,
         condition,
         weight: weight ? parseFloat(weight) : null,
@@ -65,6 +93,10 @@ export default function CheckPage({ params }: { params: Promise<{ lang: string }
       setLoading(false);
     }
   };
+
+  if (!authChecked) {
+    return <div className="min-h-screen bg-secondary flex items-center justify-center font-bold text-primary">인증 확인 중...</div>;
+  }
 
   return (
     <div className="flex flex-col min-h-full py-8 md:py-12 pb-32 px-6 md:px-12 md:ml-64 max-w-5xl md:mx-auto w-full">

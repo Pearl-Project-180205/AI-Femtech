@@ -1,6 +1,6 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import Anthropic from "@anthropic-ai/sdk";
 
 const anthropic = new Anthropic({
@@ -28,20 +28,23 @@ Return JSON strictly in this format:
 }`;
 
 export async function analyzeCondition(payload: {
-  device_id: string;
   sleep: string;
   condition: string[];
   weight?: number | null;
   menstrual: string;
   activity: string;
 }) {
-  const { device_id, sleep, condition, weight, menstrual, activity } = payload;
+  const { sleep, condition, weight, menstrual, activity } = payload;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("Unauthorized");
 
   // 1. Fetch user profile
   const { data: userProfile, error: userError } = await supabase
     .from("user_profiles")
     .select("*")
-    .eq("device_id", device_id)
+    .eq("id", user.id)
     .single();
 
   if (userError || !userProfile) {
@@ -105,8 +108,7 @@ Activity: ${activity}`;
     const { data: newLog, error: insertError } = await supabase
       .from("daily_logs")
       .insert({
-        user_id: userProfile.id,
-        device_id: device_id,
+        user_id: user.id,
         date: today,
         sleep,
         condition,
@@ -160,6 +162,7 @@ export async function updateActionCompletion(
   completedIndices: number[],
   score: number
 ) {
+  const supabase = await createClient();
   const { error } = await supabase
     .from("daily_logs")
     .update({

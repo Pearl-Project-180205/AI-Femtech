@@ -34,24 +34,13 @@ export default function OnboardingPage({ params }: { params: Promise<{ lang: str
     if (!goal || !baseline) return;
     setLoading(true);
 
-    const deviceId = crypto.randomUUID();
-
-    const { data: user, error } = await supabase
-      .from("user_profiles")
-      .insert({
-        device_id: deviceId,
-        goal,
-        baseline_condition: baseline,
-      })
-      .select()
-      .single();
-
-    if (!error && user) {
-      localStorage.setItem("device_id", deviceId);
-      router.push(`/${lang}`);
-    } else {
-      console.error("Supabase insert error:", error?.message, error?.code, error?.details);
-      alert(dict.onboarding?.errorMessage || "Something went wrong. Please try again.");
+    try {
+      localStorage.setItem("temp_goal", goal);
+      localStorage.setItem("temp_baseline", baseline);
+      
+      router.push(`/${lang}/login`);
+    } catch (error) {
+      alert("Error saving progress.");
       setLoading(false);
     }
   };
