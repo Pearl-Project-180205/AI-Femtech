@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import { UserStats, DailyLog } from "@/lib/types";
 import { updateActionCompletion } from "@/app/actions";
 import { startOfWeek, addDays, format } from "date-fns";
@@ -35,24 +35,25 @@ export default function HomePage({ params }: { params: Promise<{ lang: string }>
   }, [params]);
 
   useEffect(() => {
-    const deviceId = localStorage.getItem("device_id");
-    if (!deviceId) {
-      router.push("/onboarding");
-      return;
-    }
-
     const loadData = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.push(`/${lang}/onboarding`);
+        return;
+      }
+
       try {
-        // 1. Fetch User Profile
-        const { data: user } = await supabase
+        // 1. Fetch User Profile mapping directly to Auth ID
+        const { data: userProfile } = await supabase
           .from("user_profiles")
           .select("id")
-          .eq("device_id", deviceId)
+          .eq("id", user.id)
           .single();
 
-        if (!user) {
-          localStorage.removeItem("device_id");
-          router.push("/onboarding");
+        if (!userProfile) {
+          router.push(`/${lang}/onboarding`);
           return;
         }
 
@@ -99,7 +100,7 @@ export default function HomePage({ params }: { params: Promise<{ lang: string }>
     };
 
     loadData();
-  }, [router]);
+  }, [lang, router]);
 
   const toggleAction = async (index: number) => {
     if (!todayLog) return;
