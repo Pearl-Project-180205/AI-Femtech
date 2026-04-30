@@ -1,10 +1,17 @@
 "use client";
 
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { getDictionary } from "@/lib/dictionaries";
 
 export default function LoginPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = use(params);
+  const [dict, setDict] = useState<any>(null);
+
+  useEffect(() => {
+    getDictionary(lang).then(setDict);
+  }, [lang]);
   
   const handleGoogleLogin = async () => {
     const supabase = createClient();
@@ -37,6 +44,10 @@ export default function LoginPage({ params }: { params: Promise<{ lang: string }
        
        <div className="mt-8 text-[10px] text-neutral/50">
          로그인함으로써 서비스 이용약관 및 개인정보처리방침에 동의하게 됩니다.
+       </div>
+       
+       <div className="mt-auto pt-12 pb-6">
+         {dict && <LanguageSelector currentLang={lang} dict={dict} />}
        </div>
     </div>
   )

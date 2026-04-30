@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Scale, Zap, BrainCircuit, HelpCircle, ArrowRight, Check } from "lucide-react";
 import { getDictionary } from "@/lib/dictionaries";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 const GOALS = [
   { id: "체중 관리", label: "Weight Management", icon: Scale },
@@ -147,6 +148,9 @@ export default function OnboardingPage({ params }: { params: Promise<{ lang: str
           
           <div className="mt-16 text-[10px] text-neutral/60 tracking-wider">
              {dict.onboarding?.craftedFor || "© 2024 MORA. Crafted for your sanctuary."}
+          </div>
+          <div className="mt-10 mb-8 w-full flex justify-center">
+            <LanguageSelector currentLang={lang} dict={dict} />
           </div>
         </div>
       </div>
