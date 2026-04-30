@@ -40,15 +40,30 @@ export async function analyzeCondition(payload: {
 
   if (!user) throw new Error("Unauthorized");
 
-  // 1. Fetch user profile
-  const { data: userProfile, error: userError } = await supabase
+  // 1. Fetch user profile (create default if not exists)
+  let { data: userProfile, error: userError } = await supabase
     .from("user_profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
   if (userError || !userProfile) {
-    throw new Error("User profile not found. Please complete onboarding.");
+    const { data: newProfile, error: createError } = await supabase
+      .from("user_profiles")
+      .upsert({
+        id: user.id,
+        device_id: user.id,
+        age_range: "unknown",
+        goal: "일반 건강 관리",
+        baseline_condition: "특별한 증상 없음",
+      })
+      .select()
+      .single();
+
+    if (createError || !newProfile) {
+      throw new Error("프로필을 불러올 수 없습니다. 온보딩을 완료해주세요.");
+    }
+    userProfile = newProfile;
   }
 
   // 2. Fetch last 3 days logs for pattern context
@@ -121,7 +136,9 @@ Activity: ${activity}`;
           "물을 마시세요",
           "휴식하세요",
           "스트레칭 하세요",
-        ]
+        ],
+        score: 0,
+        completed_actions: [],
       })
       .select()
       .single();

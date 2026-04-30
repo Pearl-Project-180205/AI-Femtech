@@ -57,7 +57,9 @@ export default function OnboardingPage({ params }: { params: Promise<{ lang: str
     <div className="fixed inset-0 overflow-y-auto z-10 flex flex-col bg-secondary text-primary font-sans">
       {/* Top Header */}
       <header className="flex justify-between items-center px-6 py-5 border-b border-neutral/10 bg-secondary w-full">
-        <h1 className="text-xl font-serif font-bold text-primary tracking-wide">For:M</h1>
+        <div className="h-24">
+          <img src="/mora-logo.png" alt="MORA" className="h-full object-contain" />
+        </div>
         <button className="w-8 h-8 rounded-full bg-neutral/10 flex items-center justify-center text-primary/80 transition-colors hover:bg-neutral/20">
            <HelpCircle className="w-5 h-5" />
         </button>
@@ -144,7 +146,7 @@ export default function OnboardingPage({ params }: { params: Promise<{ lang: str
           </button>
           
           <div className="mt-16 text-[10px] text-neutral/60 tracking-wider">
-             {dict.onboarding?.craftedFor || "© 2024 For:M. Crafted for your sanctuary."}
+             {dict.onboarding?.craftedFor || "© 2024 MORA. Crafted for your sanctuary."}
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "포엠 (For:M) | Daily Guidance",
+  title: "MORA | AI Coach For Your Best Days",
   description: "당신을 위한 맞춤형 컨디션 코칭 앱",
 };
 

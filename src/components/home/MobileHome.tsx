@@ -34,7 +34,9 @@ export function MobileHome({
       <div className="w-full flex-1 flex flex-col pt-4 max-w-lg mx-auto">
         {/* Top Header */}
         <header className="flex justify-between items-center mb-6 w-full px-2">
-          <h1 className="text-xl font-serif text-primary tracking-wide">For:M</h1>
+          <div className="h-24">
+            <img src="/mora-logo.png" alt="MORA" className="h-full object-contain" />
+          </div>
           <div className="flex items-center space-x-4">
             <Bell className="w-5 h-5 text-neutral/70" />
             <Settings className="w-5 h-5 text-neutral/70" />

@@ -3,10 +3,29 @@
 import { usePathname, useRouter } from "next/navigation";
 import { Home, Activity, Calendar, User, LayoutDashboard, ListTodo, Users, LogOut, HelpCircle, Sparkles, Plus } from "lucide-react";
 import { LanguageSelector } from "./LanguageSelector";
+import { createClient } from "@/lib/supabase/client";
+import { useState, useEffect } from "react";
 
 export function Navigation({ lang, dict }: { lang: string, dict: any }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      const photo = user?.user_metadata?.avatar_url || user?.user_metadata?.picture || null;
+      setAvatarUrl(photo);
+    };
+    fetchUser();
+  }, []);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push(`/${lang}/login`);
+  };
 
   if (pathname === `/${lang}/onboarding`) return null;
 
@@ -29,11 +48,17 @@ export function Navigation({ lang, dict }: { lang: string, dict: any }) {
       {/* PC Sidebar */}
       <aside className="hidden md:flex flex-col w-64 bg-white min-h-screen fixed left-0 top-0 border-r border-neutral/10 z-50">
         <div className="p-10 pb-6">
-          <h1 className="text-3xl font-serif font-bold text-primary mb-10">For:M</h1>
+          <div className="mb-8 flex justify-center md:justify-start">
+            <img src="/mora-logo.png" alt="MORA" className="h-48 object-contain" />
+          </div>
           
           <div className="flex items-center space-x-4 mb-10">
-            <div className="w-10 h-10 rounded-full bg-neutral/20 overflow-hidden flex-shrink-0">
-               <img src="https://i.pravatar.cc/150?img=5" alt="Elena" className="w-full h-full object-cover" />
+            <div className="w-10 h-10 rounded-full bg-neutral/20 overflow-hidden flex-shrink-0 flex items-center justify-center">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Profile" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+              ) : (
+                <User className="w-5 h-5 text-neutral/50" />
+              )}
             </div>
             <div className="text-left overflow-hidden">
               <div className="text-xs text-neutral/70">{dict.nav?.welcomeBack || "Welcome back"}</div>
@@ -71,7 +96,7 @@ export function Navigation({ lang, dict }: { lang: string, dict: any }) {
              <button className="flex items-center space-x-4 text-xs font-bold text-neutral/70 hover:text-primary transition-colors focus:outline-none w-full">
                <HelpCircle className="w-4 h-4 fill-neutral/70 text-white" /><span className="flex-1 text-left">{dict.nav?.support || "Support"}</span>
              </button>
-<button className="flex items-center space-x-4 text-xs font-bold text-neutral/70 hover:text-primary transition-colors focus:outline-none w-full mt-4 border-t border-neutral/10 pt-4">
+<button onClick={handleLogout} className="flex items-center space-x-4 text-xs font-bold text-neutral/70 hover:text-primary transition-colors focus:outline-none w-full mt-4 border-t border-neutral/10 pt-4">
                <LogOut className="w-4 h-4" /><span className="flex-1 text-left">{dict.nav?.logout || "Logout"}</span>
              </button>
           </div>
