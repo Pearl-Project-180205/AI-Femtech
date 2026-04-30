@@ -37,16 +37,15 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-secondary text-primary md:flex-row">
         <Navigation lang={lang} dict={dict} />
-        {/* On Mobile: bottom padding for navigation. On Desktop: left padding for fixed sidebar. */}
-        <main className="flex-1 w-full min-h-screen relative pb-24 md:pb-10 md:pl-64 transition-all bg-secondary">
-          <div className="w-full h-full max-w-7xl mx-auto">
+        <main className="flex-1 w-full min-h-screen relative pb-24 md:pb-10 md:pl-64 transition-all bg-secondary flex flex-col">
+          <div className="w-full h-full max-w-7xl mx-auto flex-1">
             {children}
           </div>
+          {/* Static language selector at the bottom of the page */}
+          <div className="w-full py-8 mt-auto flex justify-center border-t border-neutral/10 bg-secondary z-10">
+            <LanguageSelector currentLang={lang} dict={dict} floating />
+          </div>
         </main>
-        {/* Floating language selector — always visible on all pages */}
-        <div className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40">
-          <LanguageSelector currentLang={lang} dict={dict} floating />
-        </div>
       </body>
     </html>
   );
