@@ -42,8 +42,8 @@ export default async function RootLayout({
             {children}
           </div>
           {/* Static language selector at the bottom of the page */}
-          <div className="w-full py-8 mt-auto flex justify-center border-t border-neutral/10 bg-secondary z-10">
-            <LanguageSelector currentLang={lang} dict={dict} floating />
+          <div className="w-full py-8 mt-auto flex justify-center border-t border-neutral/10 bg-secondary">
+            <LanguageSelector currentLang={lang} dict={dict} floating={false} />
           </div>
         </main>
       </body>
